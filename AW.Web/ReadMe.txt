@@ -3,7 +3,7 @@
 
 == run project .NET Core in cmd ==
 1. cd -> Project Path
-2. run "dotnet watch run"
+2. run "dotnet watch run"  
 
 == Extension Helper in VS Code ==
 1. C#
