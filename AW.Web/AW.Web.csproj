@@ -5,6 +5,8 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Configurations>Debug;Release;Staging</Configurations>
+		<IsPackable>true</IsPackable>
+
 	</PropertyGroup>
 
 	<!--Mapping AppSettings Configuration-->
@@ -43,4 +45,5 @@
 	<Target Name="RenameAppsettings" AfterTargets="Publish">
 		<Move SourceFiles="$(PublishDir)\appsettings.$(EnvironmentName).json" DestinationFiles="$(PublishDir)\appsettings.json" />
 	</Target>
+
 </Project>
