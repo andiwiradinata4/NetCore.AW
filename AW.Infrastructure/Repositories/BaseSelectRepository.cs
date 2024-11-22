@@ -30,6 +30,11 @@ namespace AW.Infrastructure.Repositories
             return dbSet.Where((T c) => !c.Disabled).Any(predicate);
         }
 
+        public virtual bool ExistsInDbWithDisabledRecord(Func<T, bool> predicate)
+        {
+            return dbSet.IgnoreQueryFilters().Any(predicate);
+        }
+
         public virtual ICollection<T> GetAll()
         {
             return (from s in dbSet.AsNoTracking()
@@ -39,19 +44,45 @@ namespace AW.Infrastructure.Repositories
                     select m).ToList();
         }
 
-        public virtual object GetAll(QueryObject query)
+        public virtual object GetAll(QueryObject query, bool withDisabled)
         {
             //string companyId = ComLoc.CompanyId;
             //string programId = ComLoc.ProgramId;
 
-            var queryable = dbSet.Where(e => e.Disabled == false).SetQuery(query);
+            IQueryable<T> queryable;
+            if (withDisabled)
+            {
+                queryable = dbSet.SetQuery(query);
+            }
+            else
+            {
+                queryable = dbSet.Where(e => e.Disabled == false).SetQuery(query);
+            }
+
+            int count = queryable.Count();
+            int totalPage = 0;
+
+            if (query.PageSize == 0 || query.Page == 0 || count < query.PageSize) totalPage = 1;
+            if (queryable.Count() > 0 && query.PageSize > 0 && count >= query.PageSize) totalPage = count / query.PageSize;
+
+            // Apply Pagination
+            if (query.Page > 0) queryable = queryable.Skip((query.Page - 1) * query.PageSize).Take(query.PageSize);
+
+            // Apply Includes
+            var allIncludes = query.Includes.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(c => c.Trim()).ToList();
+            allIncludes.ForEach(e =>
+            {
+                queryable = queryable.Include(e);
+            });
+
+
             if (!string.IsNullOrEmpty(query.Columns))
             {
                 IQueryable returnQueryable = queryable.Select("new(" + query.Columns + ")");
-                return returnQueryable;
+                return new { TotalCount = count, TotalPage = totalPage, DataSet = returnQueryable };
             }
 
-            return queryable;
+            return new { TotalCount = count, TotalPage = totalPage, DataSet = queryable };
         }
 
         public virtual async Task<List<T>> GetAllAsync()
@@ -89,6 +120,11 @@ namespace AW.Infrastructure.Repositories
         //{
         //    return queryOptions.ApplyTo(dbSet.AsNoTracking());
         //}
+
+        public virtual int Count()
+        {
+            return dbSet.Count();
+        }
 
         public virtual int CountByCondition(Expression<Func<T, bool>> predicate)
         {

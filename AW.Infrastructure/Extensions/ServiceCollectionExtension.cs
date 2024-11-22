@@ -24,10 +24,7 @@ namespace AW.Infrastructure.Extensions
             services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
             services.AddScoped(typeof(IBaseSelectRepository<,>), typeof(BaseSelectRepository<,>));
             services.AddScoped(typeof(IBaseService<,>), typeof(BaseService<,>));
-            //services.AddScoped(typeof(IBaseAsyncService<,>), typeof(BaseAsyncService<,>));
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            //services.AddEmailServices(configuration);
-            //services.AddEmailEndPoint(configuration);
         }
 
         public static void AddDbContextModel<TDbContext>(this IServiceCollection services, IConfiguration configuration) where TDbContext : DbContext

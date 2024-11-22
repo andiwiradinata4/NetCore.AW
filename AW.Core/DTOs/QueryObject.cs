@@ -10,10 +10,8 @@ namespace AW.Core.DTOs
     {
         public int Page { get; set; } = 1;
         public int PageSize { get; set; } = int.MaxValue;
-        public string FilterParams { get; set; } = string.Empty;
-        public string SortParams { get; set; } = string.Empty;
-        //public List<FilterParams?> FilterParams { get; set; } = new List<FilterParams?>();
-        //public List<SortParams?> SortParams { get; set; } = new List<SortParams?>();
+        public List<FilterParams> FilterParams { get; set; } = new List<FilterParams>();
+        public List<SortParams> SortParams { get; set; } = new List<SortParams>();
         public string? Columns { get; set; }
         public string? Filter { get; set; }
         public string Includes { get; set; } = string.Empty;
@@ -34,7 +32,7 @@ namespace AW.Core.DTOs
             orEqual,
         };
         public string Key { get; set; } = string.Empty;
-        public Options Option { get; set; } = Options.contains;
+        public string Option { get; set; } = string.Empty;
         public object Value { get; set; } = string.Empty;
     }
 
@@ -46,6 +44,6 @@ namespace AW.Core.DTOs
             DESC
         }
         public string Column { get; set; } = string.Empty;
-        public Options Option { get; set; } = Options.ASC;
+        public string Option { get; set; } = "ASC";
     }
 }

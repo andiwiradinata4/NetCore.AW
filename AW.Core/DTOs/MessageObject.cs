@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AW.Core.DTOs.Interfaces;
+using Newtonsoft.Json;
 
 namespace AW.Core.DTOs
 {
@@ -21,6 +22,7 @@ namespace AW.Core.DTOs
 
         public T Data { get; set; }
 
+        [JsonProperty]
         public bool ProcessingStatus { get; private set; } = true;
 
 

@@ -8,28 +8,28 @@ using AW.Core.DTOs;
 using AW.Core.Entities.Interface;
 using AW.Infrastructure.Interfaces.Repositories;
 using AW.Infrastructure.Interfaces.Services;
+using AW.Infrastructure.Utils;
 
 namespace AW.Infrastructure.Services
 {
     public class BaseService<TDbContext, T> : IBaseService<TDbContext, T> where TDbContext : DbContext where T : IEntityStandard
     {
-        protected string logSource;
+        protected string _logSource;
         protected readonly IBaseRepository<TDbContext, T> repo;
         public BaseService(IBaseRepository<TDbContext, T> repo)
         {
             this.repo = repo;
-            logSource = "BaseService<" + typeof(T).Name + ">";
+            _logSource = "BaseService<" + typeof(T).Name + ">";
         }
-
 
         public virtual ICollection<T> GetAll()
         {
             return repo.GetAll();
         }
 
-        public virtual object GetAll(QueryObject query)
+        public virtual object GetAll(QueryObject query, bool withDisabled)
         {
-            return repo.GetAll(query);
+            return repo.GetAll(query, withDisabled);
         }
 
         public virtual async Task<List<T>> GetAllAsync()
@@ -62,6 +62,11 @@ namespace AW.Infrastructure.Services
             return repo.ExistsInDb(predicate);
         }
 
+        public virtual bool ExistsInDbWithDisabledRecord(Func<T, bool> predicate)
+        {
+            return repo.ExistsInDbWithDisabledRecord(predicate);
+        }
+
         public virtual MessageObject<T> Create(T entity)
         {
             MessageObject<T> messageObject = ValidateCreate(entity);
@@ -69,6 +74,7 @@ namespace AW.Infrastructure.Services
             {
                 if (messageObject.ProcessingStatus)
                 {
+                    GetNewID(entity);
                     BeforeCreate(entity);
                     messageObject.Data = repo.Create(entity);
                     AfterCreate(entity);
@@ -90,6 +96,7 @@ namespace AW.Infrastructure.Services
             {
                 if (messageObject.ProcessingStatus)
                 {
+                    GetNewID(entity);
                     BeforeCreate(entity);
                     messageObject.Data = await repo.CreateAsync(entity);
                     AfterCreate(entity);
@@ -107,13 +114,6 @@ namespace AW.Infrastructure.Services
         public virtual MessageObject<T> Update(string id, T entity)
         {
             MessageObject<T> messageObject = ValidateUpdate(entity);
-
-            var context = repo.GetDbContext();
-            using (var transaction = context.Database.BeginTransaction())
-            {
-
-            }
-
             try
             {
                 if (messageObject.ProcessingStatus)
@@ -217,6 +217,19 @@ namespace AW.Infrastructure.Services
             return repo.GetColumnSet();
         }
 
+        public virtual T GetNewID(T entity)
+        {
+            if (Int64.TryParse(entity.Id, out var newId))
+            {
+                entity.Id = (repo.Count() + 1).ToString();
+            }
+            else
+            {
+                entity.Id = Helper.GetDateTimeFormat_yyyyMMddHHmmssffff();
+            }
+            return entity;
+        }
+
         protected virtual MessageObject<T> ValidateCreate(T entity)
         {
             return new MessageObject<T>(entity);
@@ -236,6 +249,42 @@ namespace AW.Infrastructure.Services
         {
             return new MessageObject<T>(entity);
         }
+
+        //protected virtual T GetNewTransactionNumber(T entity, object[] initial)
+        //{
+        //    if (Int64.TryParse(entity.Id, out var newId))
+        //    {
+        //        entity.Id = (repo.Count() + 1).ToString();
+        //    }
+        //    else
+        //    {
+        //        if (initial.Count() == 0)
+        //        {
+        //            entity.Id = Guid.NewGuid().ToString();
+        //        }
+        //        else
+        //        {
+        //            var allAutoNumber = _autoNumberRepo.GetByConditionAsQueryable(e => e.Initial == initial.First().ToString());
+        //            string format = "";
+        //            if (allAutoNumber.Count() == 0)
+        //            {
+        //                format = initial.First().ToString() ?? "" + "{1:yyyyMMdd}-{2}-{3}-{0:0000}";
+        //                _autoNumberRepo.Create(new AutoNumber()
+        //                {
+        //                    Initial = initial.First().ToString() ?? "",
+        //                    Format = format
+        //                });
+        //                _autoNumberRepo.SaveChanges();
+        //            }
+        //            else
+        //            {
+        //                format = allAutoNumber.First().Format;
+        //            }
+        //            entity.Id = string.Format(format, initial);
+        //        }
+        //    }
+        //    return entity;
+        //}
 
         protected virtual T BeforeCreate(T entity)
         {
@@ -276,6 +325,5 @@ namespace AW.Infrastructure.Services
         {
             return entity;
         }
-
     }
 }

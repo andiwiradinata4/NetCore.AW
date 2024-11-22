@@ -22,7 +22,9 @@ namespace AW.Infrastructure.Utils
             }
 #pragma warning restore SYSLIB0023 // Type or member is obsolete
 
+#pragma warning disable SYSLIB0041 // Type or member is obsolete
             var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations);
+#pragma warning restore SYSLIB0041 // Type or member is obsolete
             byte[] hash = pbkdf2.GetBytes(20);
 
             byte[] hashBytes = new byte[36];
@@ -37,7 +39,9 @@ namespace AW.Infrastructure.Utils
             byte[] salt = new byte[saltBytes];
             Array.Copy(hashBytes, 0, salt, 0, copyLengthSalt);
 
+#pragma warning disable SYSLIB0041 // Type or member is obsolete
             var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations);
+#pragma warning restore SYSLIB0041 // Type or member is obsolete
             byte[] hash = pbkdf2.GetBytes(20);
             for (int i = 0; i < copyLengthHash; i++)
             {

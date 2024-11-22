@@ -125,5 +125,8 @@ namespace AW.Infrastructure.Utils
             return defaultValue;
         }
 
+        public static string GetDateTimeFormat_yyyyMMddHHmmssffff() => DateTime.Now.ToString("yyyyMMddHHmmssffff");
+        public static string GetDateTimeFormat_yyyyMMddHHmmssffff(DateTime date) => date.ToString("yyyyMMddHHmmssffff");
+
     }
 }

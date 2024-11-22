@@ -13,7 +13,7 @@ namespace AW.Infrastructure.Interfaces.Repositories
     public interface IBaseSelectRepository<TDbContext, T> where TDbContext : DbContext where T : IEntityStandard
     {
         ICollection<T> GetAll();
-        object GetAll(QueryObject query);
+        object GetAll(QueryObject query, bool withDisabled);
         Task<List<T>> GetAllAsync();
         T? GetById(string Id);
         Task<T?> GetByIDAsync(string Id);
@@ -21,8 +21,10 @@ namespace AW.Infrastructure.Interfaces.Repositories
         IQueryable<T> GetByConditionAsQueryable(Expression<Func<T, bool>> predicate);
         IQueryable<T> GetByConditionAsQueryableWithDisabledRecord(Expression<Func<T, bool>> predicate);
         bool ExistsInDb(Func<T, bool> predicate);
+        int Count();
         int CountByCondition(Expression<Func<T, bool>> predicate);
         Task<int> CountByConditionAsync(Expression<Func<T, bool>> predicate);
         object GetColumnSet();
+        bool ExistsInDbWithDisabledRecord(Func<T, bool> predicate);
     }
 }
