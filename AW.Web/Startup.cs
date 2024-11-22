@@ -96,6 +96,10 @@ namespace AW.Web
             ///// # Get Client Credential
             //services.Configure<ClientCredential>(Configuration.GetSection("ClientCredential"));
 
+            // # Call Http Client
+            services.AddHttpClient();
+            services.AddTransient<IClientCredentialService, ClientCredentialService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

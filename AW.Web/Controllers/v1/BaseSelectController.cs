@@ -62,9 +62,15 @@ namespace AW.Web.Controllers.v1
         }
 
         [HttpPost("page")]
-        public virtual IActionResult PostPageList(QueryObject query)
+        public virtual IActionResult PostPageList([FromBody] QueryObject query)
         {
-            return Ok(svc.GetAll(query));
+            return Ok(svc.GetAll(query, false));
+        }
+
+        [HttpPost("page-with-disabled")]
+        public virtual IActionResult PostPageListWithDisabledRecord([FromBody] QueryObject query)
+        {
+            return Ok(svc.GetAll(query, true));
         }
     }
 }
