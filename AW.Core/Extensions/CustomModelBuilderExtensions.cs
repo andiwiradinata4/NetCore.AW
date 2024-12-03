@@ -9,6 +9,19 @@ namespace AW.Core.Extensions
 {
     public static class CustomModelBuilderExtensions
     {
+        public static void InitContext(this ModelBuilder modelBuilder, string defaultSchema = "dbo")
+        {
+            /// Set Default Schema
+            modelBuilder.HasDefaultSchema(defaultSchema);
+
+            /// Set IsConcurrencyToken 
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var rowVersionProperty = entityType.GetProperties().FirstOrDefault(e => e.Name == "RowVersion");
+                if (rowVersionProperty != null && rowVersionProperty.ClrType == typeof(byte[])) modelBuilder.Entity(entityType.ClrType).Property("RowVersion").IsRowVersion().IsConcurrencyToken();
+            }
+        }
+
         public static void ExcludeMigration<T>(this ModelBuilder modelBuilder) where T : class
         {
             modelBuilder.Entity<T>().ToTable(nameof(T), e => e.ExcludeFromMigrations());
