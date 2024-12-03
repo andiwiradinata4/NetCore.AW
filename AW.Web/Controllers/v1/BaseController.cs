@@ -36,6 +36,57 @@ namespace AW.Web.Controllers.v1
             return BadRequest(messageObject);
         }
 
+        public virtual MessageObject<T> ValidateUpdate([FromRoute] string id, [FromBody] T obj)
+        {
+            MessageObject<T> messageObject = new MessageObject<T>();
+            if (id != obj.Id)
+            {
+                //DefaultInterpolatedStringHandler defaultInterpolatedStringHandler = new DefaultInterpolatedStringHandler(31, 2);
+                //defaultInterpolatedStringHandler.AppendLiteral("Route Id ");
+                //defaultInterpolatedStringHandler.AppendFormatted(id);
+                //defaultInterpolatedStringHandler.AppendLiteral(" not equal to Body Id ");
+                //defaultInterpolatedStringHandler.AppendFormatted(obj.Id);
+
+                messageObject.AddMessage(MessageType.Error, "Route Id", $"Route Id {id} not equal to Body Id {obj.Id}", "Id");
+                //return BadRequest(messageObject);
+            }
+
+            if (obj == null || obj.RowVersion == null)
+            {
+                //DefaultInterpolatedStringHandler defaultInterpolatedStringHandler = new DefaultInterpolatedStringHandler(39, 1);
+                //defaultInterpolatedStringHandler.AppendLiteral("RowVersion of Body Id ");
+                //defaultInterpolatedStringHandler.AppendFormatted(id);
+                //defaultInterpolatedStringHandler.AppendLiteral(" cannot be null. ");
+                //return BadRequest(defaultInterpolatedStringHandler.ToStringAndClear());
+
+                //MessageObject<T> messageObject = new MessageObject<T>();
+                messageObject.AddMessage(MessageType.Error, "RowVersion", $"RowVersion of Body Id {id} cannot be null", "RowVersion");
+                //return BadRequest(messageObject);
+            }
+
+            T? data = svc.GetById(obj!.Id);
+            if (data == null)
+            {
+                //DefaultInterpolatedStringHandler defaultInterpolatedStringHandler = new DefaultInterpolatedStringHandler(39, 1);
+                //defaultInterpolatedStringHandler.AppendLiteral("Data ");
+                //defaultInterpolatedStringHandler.AppendFormatted(id);
+                //defaultInterpolatedStringHandler.AppendLiteral(" not found. ");
+                //return BadRequest(defaultInterpolatedStringHandler.ToStringAndClear());
+
+                //MessageObject<T> messageObject = new MessageObject<T>();
+                messageObject.AddMessage(MessageType.Error, "Data", $"Data {id} not found", "Data");
+                //return BadRequest(messageObject);
+            }
+
+            if (Convert.ToBase64String(data!.RowVersion) != Convert.ToBase64String(obj!.RowVersion!))
+            {
+                //MessageObject<T> messageObject = new MessageObject<T>();
+                messageObject.AddMessage(MessageType.Error, "RowVersion Conflict", "The record has been changed by another user since you started editing it. Please try again.", "RowVersion");
+                //return Conflict(messageObject);
+            }
+            return messageObject;
+        }
+
         [HttpPut("{id}")]
         public virtual IActionResult Update([FromRoute] string id, [FromBody] T obj)
         {
@@ -44,41 +95,7 @@ namespace AW.Web.Controllers.v1
                 return BadRequest(base.ModelState);
             }
 
-            if (id != obj.Id)
-            {
-                DefaultInterpolatedStringHandler defaultInterpolatedStringHandler = new DefaultInterpolatedStringHandler(31, 2);
-                defaultInterpolatedStringHandler.AppendLiteral("Route Id ");
-                defaultInterpolatedStringHandler.AppendFormatted(id);
-                defaultInterpolatedStringHandler.AppendLiteral(" not equal to Body Id ");
-                defaultInterpolatedStringHandler.AppendFormatted(obj.Id);
-                return BadRequest(defaultInterpolatedStringHandler.ToStringAndClear());
-            }
-
-            if (obj == null || obj.RowVersion == null)
-            {
-                DefaultInterpolatedStringHandler defaultInterpolatedStringHandler = new DefaultInterpolatedStringHandler(39, 1);
-                defaultInterpolatedStringHandler.AppendLiteral("RowVersion of Body Id ");
-                defaultInterpolatedStringHandler.AppendFormatted(id);
-                defaultInterpolatedStringHandler.AppendLiteral(" cannot be null. ");
-                return BadRequest(defaultInterpolatedStringHandler.ToStringAndClear());
-            }
-
-            T? data = svc.GetById(obj.Id);
-            if (data == null)
-            {
-                DefaultInterpolatedStringHandler defaultInterpolatedStringHandler = new DefaultInterpolatedStringHandler(39, 1);
-                defaultInterpolatedStringHandler.AppendLiteral("Data ");
-                defaultInterpolatedStringHandler.AppendFormatted(id);
-                defaultInterpolatedStringHandler.AppendLiteral(" not found. ");
-                return BadRequest(defaultInterpolatedStringHandler.ToStringAndClear());
-            }
-
-            if (Convert.ToBase64String(data.RowVersion) != Convert.ToBase64String(obj.RowVersion))
-            {
-                MessageObject<T> messageObject = new MessageObject<T>();
-                messageObject.AddMessage(MessageType.Error, "RowVersion Conflict", "The record has been changed by another user since you started editing it. Please try again.", "RowVersion");
-                return Conflict(messageObject);
-            }
+            MessageObject<T> messageObject = ValidateUpdate(id, obj);
 
             try
             {
@@ -108,41 +125,7 @@ namespace AW.Web.Controllers.v1
                 return BadRequest(base.ModelState);
             }
 
-            if (id != obj.Id)
-            {
-                DefaultInterpolatedStringHandler defaultInterpolatedStringHandler = new DefaultInterpolatedStringHandler(31, 2);
-                defaultInterpolatedStringHandler.AppendLiteral("Route Id ");
-                defaultInterpolatedStringHandler.AppendFormatted(id);
-                defaultInterpolatedStringHandler.AppendLiteral(" not equal to Body Id ");
-                defaultInterpolatedStringHandler.AppendFormatted(obj.Id);
-                return BadRequest(defaultInterpolatedStringHandler.ToStringAndClear());
-            }
-
-            if (obj == null || obj.RowVersion == null)
-            {
-                DefaultInterpolatedStringHandler defaultInterpolatedStringHandler = new DefaultInterpolatedStringHandler(39, 1);
-                defaultInterpolatedStringHandler.AppendLiteral("RowVersion of Body Id ");
-                defaultInterpolatedStringHandler.AppendFormatted(id);
-                defaultInterpolatedStringHandler.AppendLiteral(" cannot be null. ");
-                return BadRequest(defaultInterpolatedStringHandler.ToStringAndClear());
-            }
-
-            T? data = svc.GetById(obj.Id);
-            if (data == null)
-            {
-                DefaultInterpolatedStringHandler defaultInterpolatedStringHandler = new DefaultInterpolatedStringHandler(39, 1);
-                defaultInterpolatedStringHandler.AppendLiteral("Data ");
-                defaultInterpolatedStringHandler.AppendFormatted(id);
-                defaultInterpolatedStringHandler.AppendLiteral(" not found. ");
-                return BadRequest(defaultInterpolatedStringHandler.ToStringAndClear());
-            }
-
-            if (Convert.ToBase64String(data.RowVersion) != Convert.ToBase64String(obj.RowVersion))
-            {
-                MessageObject<T> messageObject = new MessageObject<T>();
-                messageObject.AddMessage(MessageType.Error, "RowVersion Conflict", "The record has been changed by another user since you started editing it. Please try again.", "RowVersion");
-                return Conflict(messageObject);
-            }
+            MessageObject<T> messageObject = ValidateUpdate(id, obj);
 
             try
             {
