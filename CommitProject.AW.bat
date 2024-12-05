@@ -1,5 +1,5 @@
 @echo off
-cd /d "D:\My Project\NETCore\AW"
+cd /d "C:\Project\NetCore\AW"
 git add .
 set /p userInput=Enter your commit message:
 git commit -m "%userInput%"
