@@ -67,7 +67,7 @@ namespace AW.Infrastructure.Services
             return repo.ExistsInDbWithDisabledRecord(predicate);
         }
 
-        public virtual MessageObject<T> Create(T entity)
+        public virtual MessageObject<T> Create(T entity, bool useTransaction = false)
         {
             MessageObject<T> messageObject = ValidateCreate(entity);
             try
@@ -76,7 +76,7 @@ namespace AW.Infrastructure.Services
                 {
                     GetNewID(entity);
                     BeforeCreate(entity);
-                    messageObject.Data = repo.Create(entity);
+                    messageObject.Data = repo.Create(entity, useTransaction);
                     AfterCreate(entity);
                 }
             }
@@ -89,7 +89,7 @@ namespace AW.Infrastructure.Services
             return messageObject;
         }
 
-        public virtual async Task<MessageObject<T>> CreateAsync(T entity)
+        public virtual async Task<MessageObject<T>> CreateAsync(T entity, bool useTransaction = false)
         {
             MessageObject<T> messageObject = ValidateCreate(entity);
             try
@@ -98,7 +98,7 @@ namespace AW.Infrastructure.Services
                 {
                     GetNewID(entity);
                     BeforeCreate(entity);
-                    messageObject.Data = await repo.CreateAsync(entity);
+                    messageObject.Data = await repo.CreateAsync(entity, useTransaction);
                     AfterCreate(entity);
                 }
             }
@@ -111,7 +111,7 @@ namespace AW.Infrastructure.Services
             return messageObject;
         }
 
-        public virtual MessageObject<T> Update(string id, T entity)
+        public virtual MessageObject<T> Update(string id, T entity, bool useTransaction = false)
         {
             MessageObject<T> messageObject = ValidateUpdate(entity);
             try
@@ -119,7 +119,7 @@ namespace AW.Infrastructure.Services
                 if (messageObject.ProcessingStatus)
                 {
                     BeforeUpdate(entity);
-                    messageObject.Data = repo.Update(id, entity);
+                    messageObject.Data = repo.Update(id, entity, useTransaction);
                     AfterCreate(entity);
                 }
             }
@@ -132,7 +132,7 @@ namespace AW.Infrastructure.Services
             return messageObject;
         }
 
-        public virtual async Task<MessageObject<T>> UpdateAsync(string id, T entity)
+        public virtual async Task<MessageObject<T>> UpdateAsync(string id, T entity, bool useTransaction = false)
         {
             MessageObject<T> messageObject = ValidateUpdate(entity);
             try
@@ -140,7 +140,7 @@ namespace AW.Infrastructure.Services
                 if (messageObject.ProcessingStatus)
                 {
                     BeforeUpdate(entity);
-                    messageObject.Data = await repo.UpdateAsync(id, entity);
+                    messageObject.Data = await repo.UpdateAsync(id, entity, useTransaction);
                     AfterCreate(entity);
                 }
             }
@@ -153,13 +153,13 @@ namespace AW.Infrastructure.Services
             return messageObject;
         }
 
-        public virtual MessageObject<T> Disable(string id)
+        public virtual MessageObject<T> Disable(string id, bool useTransaction = false)
         {
             T? entity = repo.GetById(id);
             return Disable(id, entity!);
         }
 
-        public virtual MessageObject<T> Disable(string id, T entity)
+        public virtual MessageObject<T> Disable(string id, T entity, bool useTransaction = false)
         {
             MessageObject<T> messageObject = new MessageObject<T>();
             try
@@ -169,7 +169,7 @@ namespace AW.Infrastructure.Services
                     if (messageObject.ProcessingStatus)
                     {
                         BeforeDisable(entity);
-                        messageObject.Data = repo.Disable(entity);
+                        messageObject.Data = repo.Disable(entity, useTransaction);
                         AfterDisable(entity);
                     }
                 }
@@ -184,13 +184,13 @@ namespace AW.Infrastructure.Services
             return messageObject;
         }
 
-        public virtual MessageObject<T> Delete(string id)
+        public virtual MessageObject<T> Delete(string id, bool useTransaction = false)
         {
             T? entity = repo.GetById(id);
-            return Delete(entity!);
+            return Delete(entity!, useTransaction);
         }
 
-        public virtual MessageObject<T> Delete(T entity)
+        public virtual MessageObject<T> Delete(T entity, bool useTransaction = false)
         {
             MessageObject<T> messageObject = new MessageObject<T>();
             try
@@ -199,7 +199,7 @@ namespace AW.Infrastructure.Services
                 {
                     messageObject = ValidateRemove(entity!);
                     BeforeRemove(entity);
-                    messageObject.Data = repo.Delete(entity);
+                    messageObject.Data = repo.Delete(entity, useTransaction);
                     AfterRemove(entity);
                 }
             }

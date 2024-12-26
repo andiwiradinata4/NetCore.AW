@@ -36,7 +36,7 @@ namespace AW.Web.Controllers.v1
             return BadRequest(messageObject);
         }
 
-        public virtual MessageObject<T> ValidateUpdate([FromRoute] string id, [FromBody] T obj)
+        protected virtual MessageObject<T> ValidateUpdate([FromRoute] string id, [FromBody] T obj)
         {
             MessageObject<T> messageObject = new MessageObject<T>();
             if (id != obj.Id)

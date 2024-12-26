@@ -62,7 +62,11 @@ namespace AW.Infrastructure.Repositories
             int count = queryable.Count();
             int totalPage = 0;
 
-            if (query.PageSize == 0 || query.Page == 0 || count < query.PageSize) totalPage = 1;
+            if (queryable.Count() == 0)
+            {
+                totalPage = 0;
+            }
+            else if (query.PageSize == 0 || query.Page == 0 || count < query.PageSize) { totalPage = 1; }
             if (queryable.Count() > 0 && query.PageSize > 0 && count >= query.PageSize) totalPage = count / query.PageSize;
 
             // Apply Pagination

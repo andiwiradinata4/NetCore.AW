@@ -20,14 +20,14 @@ namespace AW.Infrastructure.Interfaces.Services
         bool Exists(string id);
         bool ExistsInDb(Func<T, bool> predicate);
         bool ExistsInDbWithDisabledRecord(Func<T, bool> predicate);
-        MessageObject<T> Create(T entity);
-        Task<MessageObject<T>> CreateAsync(T entity);
-        MessageObject<T> Update(string id, T entity);
-        Task<MessageObject<T>> UpdateAsync(string id, T entity);
-        MessageObject<T> Disable(string id);
-        MessageObject<T> Disable(string id, T entity);
-        MessageObject<T> Delete(string id);
-        MessageObject<T> Delete(T entity);
+        MessageObject<T> Create(T entity, bool useTransaction = false);
+        Task<MessageObject<T>> CreateAsync(T entity, bool useTransaction = false);
+        MessageObject<T> Update(string id, T entity, bool useTransaction = false);
+        Task<MessageObject<T>> UpdateAsync(string id, T entity, bool useTransaction = false);
+        MessageObject<T> Disable(string id, bool useTransaction = false);
+        MessageObject<T> Disable(string id, T entity, bool useTransaction = false);
+        MessageObject<T> Delete(string id, bool useTransaction = false);
+        MessageObject<T> Delete(T entity, bool useTransaction = false);
         object GetColumnSet();
         T GetNewID(T entity);
     }
