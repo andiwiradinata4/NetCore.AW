@@ -16,6 +16,7 @@ using AW.Web.Middlewares;
 using AW.Infrastructure.Services;
 using AW.Infrastructure.Interfaces.Repositories;
 using AW.Infrastructure.Repositories;
+using AW.Infrastructure.Middlewares;
 
 namespace AW.Web
 {
@@ -140,8 +141,12 @@ namespace AW.Web
             app.UseStaticFiles();
             app.UseRouting();
             app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
+            app.UseMiddleware<JwtMiddleware>();
+
             app.UseAuthentication();
-            
+
+
             //app.UseMiddleware<MessageHandlerInterceptor>();
             //app.UseMiddleware<FilterComLoc>();
             //app.UsFilterComLoc();

@@ -36,7 +36,7 @@ namespace AW.Web
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseUrls(urls: "https://localhost:3104");
+                    webBuilder.UseUrls(urls: "https://localhost:3103");
                     webBuilder.UseStartup<Startup>();
                 });
     }
