@@ -6,6 +6,7 @@ using AW.Core.DTOs;
 using AW.Core.Entities.Interface;
 using AW.Core.Entities;
 using AW.Infrastructure.Interfaces.Services;
+using AW.Core.DTOs.Interfaces;
 
 namespace AW.Web.Controllers.v1
 {
@@ -99,13 +100,9 @@ namespace AW.Web.Controllers.v1
 
             try
             {
-                MessageObject<T> messageObject2 = svc.Update(id, obj);
-                if (messageObject2.ProcessingStatus)
-                {
-                    return Ok(messageObject2);
-                }
-
-                return BadRequest(messageObject2);
+                if (messageObject.ProcessingStatus) messageObject = svc.Update(id, obj);
+                if (messageObject.ProcessingStatus) return Ok(messageObject);
+                return BadRequest(messageObject);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -129,13 +126,9 @@ namespace AW.Web.Controllers.v1
 
             try
             {
-                MessageObject<T> messageObject2 = svc.Disable(id, obj);
-                if (messageObject2.ProcessingStatus)
-                {
-                    return Ok(messageObject2);
-                }
-
-                return BadRequest(messageObject2);
+                if (messageObject.ProcessingStatus) messageObject = svc.Disable(id, obj);
+                if (messageObject.ProcessingStatus) return Ok(messageObject);
+                return BadRequest(messageObject);
             }
             catch (DbUpdateConcurrencyException)
             {
