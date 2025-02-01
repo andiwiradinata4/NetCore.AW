@@ -70,7 +70,7 @@ namespace AW.Infrastructure.Repositories
             if (queryable.Count() > 0 && query.PageSize > 0 && count >= query.PageSize) totalPage = count / query.PageSize;
 
             // Apply Pagination
-            if (query.Page > 0) queryable = queryable.Skip((query.Page - 1) * query.PageSize).Take(query.PageSize);
+            if (query.Page >= 0) queryable = queryable.Skip((query.Page) * query.PageSize).Take(query.PageSize);
 
             // Apply Includes
             var allIncludes = query.Includes.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(c => c.Trim()).ToList();

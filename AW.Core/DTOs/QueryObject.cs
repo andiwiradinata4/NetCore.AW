@@ -22,14 +22,24 @@ namespace AW.Core.DTOs
         public enum Options
         {
             contains,
-            eq,
-            startWith,
-            endtWith,
+            notContains,
+            equals,
+            notEquals,
+            startsWith,
+            endsWith,
             min,
             max,
             minEqual,
             maxEqual,
             orEqual,
+            dateIs,
+            dateIsNot,
+            dateIsBefore,
+            dateIsAfter,
+            lt,
+            lte,
+            gt,
+            gte
         };
         public string Key { get; set; } = string.Empty;
         public string Option { get; set; } = string.Empty;
