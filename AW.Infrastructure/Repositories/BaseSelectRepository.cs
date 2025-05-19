@@ -120,6 +120,26 @@ namespace AW.Infrastructure.Repositories
             return await dbSet.FindAsync(Id);
         }
 
+        public T? GetByIdWithQueryObject(string Id, QueryObject query)
+        {
+            IQueryable<T> queryable = dbSet.Where(e => e.Id == Id).SetQuery(query);
+            
+            // Apply Includes
+            var allIncludes = query.Includes.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(c => c.Trim()).ToList();
+            allIncludes.ForEach(e =>
+            {
+                queryable = queryable.Include(e);
+            });
+
+
+            if (!string.IsNullOrEmpty(query.Columns))
+            {
+                IQueryable returnQueryable = queryable.Select("new(" + query.Columns + ")");
+                return returnQueryable.First();
+            }
+            return queryable.First();
+        }
+
         //public IQueryable GetByODataQuery(ODataQueryOptions<T> queryOptions)
         //{
         //    return queryOptions.ApplyTo(dbSet.AsNoTracking());
@@ -154,5 +174,6 @@ namespace AW.Infrastructure.Repositories
             allColumns = columns.Select((e) => new ColumnSet() { Name = e.Name, Type = e.GetColumnType(), Size = e.GetMaxLength() ?? 0 }).ToList();
             return allColumns;
         }
+
     }
 }

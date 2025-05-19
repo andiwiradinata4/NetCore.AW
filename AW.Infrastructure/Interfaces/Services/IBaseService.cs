@@ -17,6 +17,7 @@ namespace AW.Infrastructure.Interfaces.Services
         //IQueryable GetByODataQuery(ODataQueryOptions<T> queryOptions);
         T? GetById(string Id);
         Task<T?> GetByIDAsync(string Id);
+        T? GetByIdWithQueryObject(string Id, QueryObject query);
         bool Exists(string id);
         bool ExistsInDb(Func<T, bool> predicate);
         bool ExistsInDbWithDisabledRecord(Func<T, bool> predicate);

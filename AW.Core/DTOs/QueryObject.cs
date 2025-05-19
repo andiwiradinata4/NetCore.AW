@@ -8,7 +8,7 @@ namespace AW.Core.DTOs
 {
     public class QueryObject
     {
-        public int Page { get; set; } = 1;
+        public int Page { get; set; } = -1;
         public int PageSize { get; set; } = int.MaxValue;
         public List<FilterParams> FilterParams { get; set; } = new List<FilterParams>();
         public List<SortParams> SortParams { get; set; } = new List<SortParams>();
@@ -41,6 +41,8 @@ namespace AW.Core.DTOs
             gt,
             gte
         };
+
+        public string ValueType { get; set; } = string.Empty;
         public string Key { get; set; } = string.Empty;
         public string Option { get; set; } = string.Empty;
         public object Value { get; set; } = string.Empty;

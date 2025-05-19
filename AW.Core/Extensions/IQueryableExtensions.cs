@@ -72,7 +72,7 @@ namespace AW.Core.Extensions
                     }
                     else
                     {
-                        if (DateTime.TryParse(filterParam.Value.ToString(), out var dtmValue))
+                        if (DateTime.TryParse(filterParam.Value.ToString(), out var dtmValue) && filterParam.ValueType == string.Empty)
                         {
                             if (filterParam.Option.ToLower() == FilterParams.Options.dateIs.ToString().ToLower()) queries = queries.Where(e => EF.Property<DateTime>(e, filterParam.Key).Equals(dtmValue));
                             if (filterParam.Option.ToLower() == FilterParams.Options.dateIsNot.ToString().ToLower()) queries = queries.Where(e => EF.Property<DateTime>(e, filterParam.Key) != dtmValue);
@@ -85,7 +85,7 @@ namespace AW.Core.Extensions
                             if (filterParam.Option.ToLower() == FilterParams.Options.max.ToString().ToLower()) queries = queries = queries.Where(e => EF.Property<DateTime>(e, filterParam.Key) < dtmValue);
                             if (filterParam.Option.ToLower() == FilterParams.Options.maxEqual.ToString().ToLower()) queries = queries = queries.Where(e => EF.Property<DateTime>(e, filterParam.Key) <= dtmValue);
                         }
-                        else if (double.TryParse(filterParam.Value.ToString(), out var doubleValue))
+                        else if (double.TryParse(filterParam.Value.ToString(), out var doubleValue) && filterParam.ValueType == string.Empty)
                         {
                             if (filterParam.Option.ToLower() == FilterParams.Options.equals.ToString().ToLower()) queries = queries.Where(e => EF.Property<double>(e, filterParam.Key).Equals(doubleValue));
                             if (filterParam.Option.ToLower() == FilterParams.Options.notEquals.ToString().ToLower()) queries = queries.Where(e => EF.Property<double>(e, filterParam.Key) != doubleValue);
@@ -100,7 +100,7 @@ namespace AW.Core.Extensions
                             if (filterParam.Option.ToLower() == FilterParams.Options.max.ToString().ToLower()) queries = queries.Where(e => EF.Property<double>(e, filterParam.Key) < doubleValue);
                             if (filterParam.Option.ToLower() == FilterParams.Options.maxEqual.ToString().ToLower()) queries = queries.Where(e => EF.Property<double>(e, filterParam.Key) <= doubleValue);
                         }
-                        else if (int.TryParse(filterParam.Value.ToString(), out var intValue))
+                        else if (int.TryParse(filterParam.Value.ToString(), out var intValue) && filterParam.ValueType == string.Empty)
                         {
                             if (filterParam.Option.ToLower() == FilterParams.Options.equals.ToString().ToLower()) queries = queries.Where(e => EF.Property<double>(e, filterParam.Key).Equals(intValue));
                             if (filterParam.Option.ToLower() == FilterParams.Options.notEquals.ToString().ToLower()) queries = queries.Where(e => EF.Property<double>(e, filterParam.Key) != intValue);
@@ -116,7 +116,7 @@ namespace AW.Core.Extensions
                             if (filterParam.Option.ToLower() == FilterParams.Options.max.ToString().ToLower()) queries = queries.Where(e => EF.Property<int>(e, filterParam.Key) < intValue);
                             if (filterParam.Option.ToLower() == FilterParams.Options.maxEqual.ToString().ToLower()) queries = queries.Where(e => EF.Property<int>(e, filterParam.Key) <= intValue);
                         }
-                        else if (bool.TryParse(filterParam.Value.ToString(), out var bolValue))
+                        else if (bool.TryParse(filterParam.Value.ToString(), out var bolValue) && filterParam.ValueType == string.Empty)
                         {
                             if (filterParam.Option.ToLower() == FilterParams.Options.equals.ToString().ToLower()) queries = queries.Where(e => EF.Property<bool>(e, filterParam.Key).Equals(bolValue));
                             if (filterParam.Option.ToLower() == FilterParams.Options.notEquals.ToString().ToLower()) queries = queries.Where(e => EF.Property<bool>(e, filterParam.Key) != bolValue);

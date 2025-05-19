@@ -17,6 +17,7 @@ namespace AW.Infrastructure.Interfaces.Repositories
         Task<List<T>> GetAllAsync();
         T? GetById(string Id);
         Task<T?> GetByIDAsync(string Id);
+        T? GetByIdWithQueryObject(string Id, QueryObject query);
         //IQueryable GetByODataQuery(ODataQueryOptions<T> queryOptions);
         IQueryable<T> GetByConditionAsQueryable(Expression<Func<T, bool>> predicate);
         IQueryable<T> GetByConditionAsQueryableWithDisabledRecord(Expression<Func<T, bool>> predicate);

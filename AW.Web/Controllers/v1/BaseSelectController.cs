@@ -37,10 +37,10 @@ namespace AW.Web.Controllers.v1
             return Ok(await svc.GetAllAsync());
         }
 
-        [HttpGet("{id}")]
-        public async virtual Task<IActionResult> Get(string id)
+        [HttpPost("{id}")]
+        public virtual IActionResult Get(string id, [FromBody] QueryObject query)
         {
-            T? data = await svc.GetByIDAsync(id);
+            T? data = svc.GetByIdWithQueryObject(id, query);
             if (data == null)
             {
                 return NotFound();

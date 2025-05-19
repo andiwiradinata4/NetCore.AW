@@ -52,6 +52,11 @@ namespace AW.Infrastructure.Services
             return await repo.GetByIDAsync(Id);
         }
 
+        public virtual T? GetByIdWithQueryObject(string Id, QueryObject query)
+        {
+            return repo.GetByIdWithQueryObject(Id, query);
+        }
+
         public virtual bool Exists(string id)
         {
             return GetById(id) != null;
@@ -325,5 +330,6 @@ namespace AW.Infrastructure.Services
         {
             return entity;
         }
+
     }
 }
