@@ -52,7 +52,7 @@ namespace AW.Infrastructure.Services
             return await repo.GetByIDAsync(Id);
         }
 
-        public virtual T? GetByIdWithQueryObject(string Id, QueryObject query)
+        public virtual object? GetByIdWithQueryObject(string Id, QueryObject query)
         {
             return repo.GetByIdWithQueryObject(Id, query);
         }

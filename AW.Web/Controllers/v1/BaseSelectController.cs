@@ -40,7 +40,7 @@ namespace AW.Web.Controllers.v1
         [HttpPost("{id}")]
         public virtual IActionResult Get(string id, [FromBody] QueryObject query)
         {
-            T? data = svc.GetByIdWithQueryObject(id, query);
+            object? data = svc.GetByIdWithQueryObject(id, query);
             if (data == null)
             {
                 return NotFound();

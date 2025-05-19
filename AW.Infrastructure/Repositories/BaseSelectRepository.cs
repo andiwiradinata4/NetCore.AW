@@ -120,7 +120,7 @@ namespace AW.Infrastructure.Repositories
             return await dbSet.FindAsync(Id);
         }
 
-        public T? GetByIdWithQueryObject(string Id, QueryObject query)
+        public object? GetByIdWithQueryObject(string Id, QueryObject query)
         {
             IQueryable<T> queryable = dbSet.Where(e => e.Id == Id).SetQuery(query);
             
@@ -131,12 +131,10 @@ namespace AW.Infrastructure.Repositories
                 queryable = queryable.Include(e);
             });
 
+            if (queryable.Count() == 0) return null;
 
-            if (!string.IsNullOrEmpty(query.Columns))
-            {
-                IQueryable returnQueryable = queryable.Select("new(" + query.Columns + ")");
-                return returnQueryable.First();
-            }
+            if (!string.IsNullOrEmpty(query.Columns)) queryable.Select("new(" + query.Columns + ")").First();
+
             return queryable.First();
         }
 
