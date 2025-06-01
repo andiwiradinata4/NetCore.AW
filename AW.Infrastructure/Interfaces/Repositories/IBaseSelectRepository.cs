@@ -13,7 +13,7 @@ namespace AW.Infrastructure.Interfaces.Repositories
     public interface IBaseSelectRepository<TDbContext, T> where TDbContext : DbContext where T : IEntityStandard
     {
         ICollection<T> GetAll();
-        object GetAll(QueryObject query, bool withDisabled);
+		MessageGetList<T> GetAll(QueryObject query, bool withDisabled);
         Task<List<T>> GetAllAsync();
         T? GetById(string Id);
         Task<T?> GetByIDAsync(string Id);

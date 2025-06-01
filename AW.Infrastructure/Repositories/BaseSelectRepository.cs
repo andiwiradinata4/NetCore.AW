@@ -44,7 +44,7 @@ namespace AW.Infrastructure.Repositories
                     select m).ToList();
         }
 
-        public virtual object GetAll(QueryObject query, bool withDisabled)
+        public virtual MessageGetList<T> GetAll(QueryObject query, bool withDisabled)
         {
             //string companyId = ComLoc.CompanyId;
             //string programId = ComLoc.ProgramId;
@@ -83,10 +83,10 @@ namespace AW.Infrastructure.Repositories
             if (!string.IsNullOrEmpty(query.Columns))
             {
                 IQueryable returnQueryable = queryable.Select("new(" + query.Columns + ")");
-                return new { TotalCount = count, TotalPage = totalPage, DataSet = returnQueryable };
+                return new MessageGetList<T>() { TotalCount = count, TotalPage = totalPage, DataSet = (IQueryable<T>)returnQueryable };
             }
 
-            return new { TotalCount = count, TotalPage = totalPage, DataSet = queryable };
+            return new MessageGetList<T>() { TotalCount = count, TotalPage = totalPage, DataSet = queryable };
         }
 
         public virtual async Task<List<T>> GetAllAsync()

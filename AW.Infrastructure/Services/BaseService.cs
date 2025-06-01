@@ -27,7 +27,7 @@ namespace AW.Infrastructure.Services
             return repo.GetAll();
         }
 
-        public virtual object GetAll(QueryObject query, bool withDisabled)
+        public virtual MessageGetList<T> GetAll(QueryObject query, bool withDisabled)
         {
             return repo.GetAll(query, withDisabled);
         }
