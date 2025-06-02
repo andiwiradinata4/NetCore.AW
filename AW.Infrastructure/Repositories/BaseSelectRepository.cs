@@ -44,7 +44,7 @@ namespace AW.Infrastructure.Repositories
                     select m).ToList();
         }
 
-        public virtual MessageGetList<T> GetAll(QueryObject query, bool withDisabled)
+        public virtual object GetAll(QueryObject query, bool withDisabled)
         {
             //string companyId = ComLoc.CompanyId;
             //string programId = ComLoc.ProgramId;
@@ -82,11 +82,11 @@ namespace AW.Infrastructure.Repositories
 
             if (!string.IsNullOrEmpty(query.Columns))
             {
-                IQueryable returnQueryable = queryable.Select("new(" + query.Columns + ")");
-                return new MessageGetList<T>() { TotalCount = count, TotalPage = totalPage, DataSet = (IQueryable<T>)returnQueryable };
+                var returnQueryable = queryable.Select("new(" + query.Columns + ")");
+                return new { TotalCount = count, TotalPage = totalPage, DataSet = queryable };
             }
 
-            return new MessageGetList<T>() { TotalCount = count, TotalPage = totalPage, DataSet = queryable };
+            return new { TotalCount = count, TotalPage = totalPage, DataSet = queryable };
         }
 
         public virtual async Task<List<T>> GetAllAsync()
@@ -123,7 +123,7 @@ namespace AW.Infrastructure.Repositories
         public object? GetByIdWithQueryObject(string Id, QueryObject query)
         {
             IQueryable<T> queryable = dbSet.Where(e => e.Id == Id).SetQuery(query);
-            
+
             // Apply Includes
             var allIncludes = query.Includes.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(c => c.Trim()).ToList();
             allIncludes.ForEach(e =>
@@ -133,7 +133,7 @@ namespace AW.Infrastructure.Repositories
 
             if (queryable.Count() == 0) return null;
 
-            if (!string.IsNullOrEmpty(query.Columns)) queryable.Select("new(" + query.Columns + ")").First();
+            if (!string.IsNullOrEmpty(query.Columns)) return queryable.Select("new(" + query.Columns + ")").First();
 
             return queryable.First();
         }

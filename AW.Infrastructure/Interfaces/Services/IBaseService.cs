@@ -12,7 +12,7 @@ namespace AW.Infrastructure.Interfaces.Services
     public interface IBaseService<TDbContext, T> where TDbContext : DbContext where T : IEntityStandard
     {
         ICollection<T> GetAll();
-		MessageGetList<T> GetAll(QueryObject query, bool withDisabled);
+		object GetAll(QueryObject query, bool withDisabled);
         Task<List<T>> GetAllAsync();
         //IQueryable GetByODataQuery(ODataQueryOptions<T> queryOptions);
         T? GetById(string Id);

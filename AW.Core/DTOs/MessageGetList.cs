@@ -10,6 +10,6 @@ namespace AW.Core.DTOs
 	{
 		public int TotalCount { get; set; }
 		public int TotalPage { get; set; }
-		public required IQueryable<T> DataSet { get; set; }
+		public object? DataSet { get; set; }
 	}
 }
