@@ -80,11 +80,7 @@ namespace AW.Infrastructure.Repositories
             });
 
 
-            if (!string.IsNullOrEmpty(query.Columns))
-            {
-                var returnQueryable = queryable.Select("new(" + query.Columns + ")");
-                return new { TotalCount = count, TotalPage = totalPage, DataSet = queryable };
-            }
+            if (!string.IsNullOrEmpty(query.Columns)) return new { TotalCount = count, TotalPage = totalPage, DataSet = queryable.Select("new(" + query.Columns + ")") };
 
             return new { TotalCount = count, TotalPage = totalPage, DataSet = queryable };
         }
