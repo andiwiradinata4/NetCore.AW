@@ -129,25 +129,28 @@ namespace AW.Infrastructure.Utils
         public static string GetDateTimeFormat_yyyyMMddHHmmssffff() => DateTime.Now.ToString("yyyyMMddHHmmssffff");
         public static string GetDateTimeFormat_yyyyMMddHHmmssffff(DateTime date) => date.ToString("yyyyMMddHHmmssffff");
 
-        public static void EnrichWithReferences(JArray mainData, JArray referencesData, string mainKey, string referencesKey, string targetPropertyName)
-        {
-            if (referencesData != null)
-            {
-                //var refDict = referencesData.Children<JObject>().Where(r => r[referencesKey] != null).GroupBy(r => r[referencesKey]!.ToString()).ToDictionary(r => r[referencesKey]?.ToString(), r => r);
-                var refDict = referencesData.Children<JObject>().Where(r => r[referencesKey] != null).GroupBy(r => r[referencesKey]!.ToString()).ToDictionary(g => g.Key, g => g.First());
-                if (refDict != null)
-                {
-                    foreach (var item in mainData.Children<JObject>())
-                    {
-                        var key = item[mainKey]?.ToString();
-                        if (key != null && refDict.TryGetValue(key, out var match))
-                        {
-                            if (match != null) item[targetPropertyName] = JObject.FromObject(match);
-                        }
-                    }
-                }
-            }
-        }
+        public static void EnrichWithReferences(JObject mainObject, JArray referencesData, string mainKey, string referencesKey, string targetPropertyName)
+		{
+			if (referencesData != null)
+			{
+				var refDict = referencesData.Children<JObject>().Where(r => r[referencesKey] != null).GroupBy(r => r[referencesKey]!.ToString()).ToDictionary(g => g.Key, g => g.First());
+				if (refDict != null)
+				{
+					JArray? mainData = mainObject["DataSet"] as JArray;
+					if (mainData != null)
+					{
+						foreach (var item in mainData.Children<JObject>())
+						{
+							var key = item[mainKey]?.ToString();
+							if (key != null && refDict.TryGetValue(key, out var match))
+							{
+								if (match != null) item[targetPropertyName] = JObject.FromObject(match);
+							}
+						}
+					}
+				}
+			}
+		}
 
     }
 }
