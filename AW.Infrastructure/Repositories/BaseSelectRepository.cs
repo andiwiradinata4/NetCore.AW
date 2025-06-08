@@ -116,7 +116,7 @@ namespace AW.Infrastructure.Repositories
             return await dbSet.FindAsync(Id);
         }
 
-        public object? GetByIdWithQueryObject(string Id, QueryObject query)
+        public virtual object? GetByIdWithQueryObject(string Id, QueryObject query)
         {
             IQueryable<T> queryable = dbSet.Where(e => e.Id == Id).SetQuery(query);
 
