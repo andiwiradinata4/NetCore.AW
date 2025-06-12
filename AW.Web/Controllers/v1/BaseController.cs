@@ -23,12 +23,18 @@ namespace AW.Web.Controllers.v1
         [HttpPost]
         public virtual IActionResult Create(T obj)
         {
+            MessageObject<T> messageObject = new MessageObject<T>();
             if (!base.ModelState.IsValid)
             {
-                return BadRequest(base.ModelState);
+                foreach (var item in base.ModelState.Where(e => e.Value?.Errors.Count > 0))
+                {
+                    messageObject.AddMessage(MessageType.Error, "400", $"{item.Value?.Errors.First().ErrorMessage}", item.Key);
+                }
+                return BadRequest(messageObject);
+                //return BadRequest(base.ModelState);
             }
 
-            MessageObject<T> messageObject = svc.Create(obj);
+            messageObject = svc.Create(obj);
             if (messageObject.ProcessingStatus)
             {
                 return Ok(messageObject);
@@ -91,12 +97,18 @@ namespace AW.Web.Controllers.v1
         [HttpPut("{id}")]
         public virtual IActionResult Update([FromRoute] string id, [FromBody] T obj)
         {
+            MessageObject<T> messageObject = new MessageObject<T>();
             if (!base.ModelState.IsValid)
             {
-                return BadRequest(base.ModelState);
+                foreach (var item in base.ModelState.Where(e => e.Value?.Errors.Count > 0))
+                {
+                    messageObject.AddMessage(MessageType.Error, "400", $"{item.Value?.Errors.First().ErrorMessage}", item.Key);
+                }
+                return BadRequest(messageObject);
+                //return BadRequest(base.ModelState);
             }
 
-            MessageObject<T> messageObject = ValidateUpdate(id, obj);
+            messageObject = ValidateUpdate(id, obj);
 
             try
             {
