@@ -125,7 +125,7 @@ namespace AW.Infrastructure.Services
                 {
                     BeforeUpdate(entity);
                     messageObject.Data = repo.Update(id, entity, useTransaction);
-                    AfterCreate(entity);
+                    AfterUpdate(entity);
                 }
             }
             catch (Exception ex)
